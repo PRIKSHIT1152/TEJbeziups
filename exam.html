@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>School Marksheet</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  font-family:Poppins,Arial;
+  background:linear-gradient(120deg,#a1c4fd,#c2e9fb);
+  padding:10px;
+}
+.container{
+  max-width:1100px;
+  margin:auto;
+  background:#fff;
+  padding:20px;
+  border-radius:15px;
+  box-shadow:0 8px 25px rgba(0,0,0,.3);
+}
+
+/* HEADER */
+.school-header{
+  display:flex;
+  align-items:center;
+  border-bottom:3px solid #4f46e5;
+  padding-bottom:15px;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.school-header img{
+  height:80px;
+}
+.school-title{
+  flex:1;
+  text-align:center;
+}
+.school-title h1{margin:0;color:#1e3a8a;font-size:22px;}
+.school-title h2{margin:2px 0;font-size:14px;}
+.school-title h4{margin-top:5px;font-size:16px;}
+
+/* STUDENT DETAILS GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+}
+label{font-weight:600;font-size:14px;}
+input{
+  width:100%;
+  padding:7px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+
+/* TABLES */
+.table-wrap{
+  overflow-x:auto;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+  min-width:800px;
+}
+th,td{
+  border:1px solid #ccc;
+  padding:8px;
+  text-align:center;
+  font-size:14px;
+}
+th{background:#4f46e5;color:#fff;}
+.sub-result{
+  background:#eef2ff;
+  font-weight:600;
+  color:#1e3a8a;
+}
+
+/* BUTTONS */
+.actions{
+  text-align:center;
+  margin-top:25px;
+}
+button{
+  padding:12px 25px;
+  border:none;
+  border-radius:8px;
+  background:#4f46e5;
+  color:#fff;
+  font-size:16px;
+  margin:5px;
+  cursor:pointer;
+}
+button:hover{background:#3730a3;}
+
+/* RESULT BOX */
+.result-box{
+  margin-top:25px;
+  padding:20px;
+  border:2px solid #4f46e5;
+  border-radius:12px;
+  background:#eef2ff;
+  font-size:15px;
+}
+
+/* SIGNATURES */
+.sign{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:40px;
+  margin-top:40px;
+  text-align:center;
+}
+.sign-box p{
+  font-weight:600;
+  margin-bottom:10px;
+  color:#1e3a8a;
+}
+.line{
+  height:60px;
+  border-bottom:2px solid #000;
+  margin:0 20px;
+}
+.sign-box span{
+  font-size:13px;
+  color:#374151;
+}
+.stamp{
+  width:90px;
+  height:90px;
+  border:2px dashed #000;
+  border-radius:50%;
+  margin:10px auto 0;
+}
+
+/* MOBILE RESPONSIVE */
+@media(max-width:1024px){
+  .grid{grid-template-columns:repeat(2,1fr);}
+  table{min-width:700px;}
+  .school-title h1{font-size:20px;}
+  .school-title h2{font-size:13px;}
+  .school-title h4{font-size:15px;}
+  .sign{grid-template-columns:1fr; gap:25px;}
+}
+
+@media(max-width:768px){
+  .grid{grid-template-columns:1fr;}
+  table{min-width:600px;font-size:13px;}
+  .school-title h1{font-size:18px;}
+  .school-title h2{font-size:12px;}
+  .school-title h4{font-size:14px;}
+}
+
+@media print{button{display:none;}}
+</style>
+</head>
+
+<body>
+<div class="container" id="printArea">
+
+<div class="school-header">
+  <img src="logo.png">
+  <div class="school-title">
+    <h1>Delhi Public Senior Secondary School</h1>
+    <h2>Near Toll Plaza Chhapar, Mzn, 251307, 9997175372</h2>
+    <h2>mail: Thedelhipublicsrsecschool@gmail.com</h2>
+    <h4>Annual Examination Report Card</h4>
+  </div>
+</div>
+
+<h3>Student Details</h3>
+<div class="grid">
+  <div><label>Name</label><input></div>
+  <div><label>Father</label><input></div>
+  <div><label>Mother</label><input></div>
+  <div><label>DOB</label><input type="date"></div>
+  <div><label>Roll</label><input></div>
+  <div><label>Class</label><input></div>
+</div>
+
+<h3>Academic Marks</h3>
+<div class="table-wrap">
+<table>
+<tr>
+<th>Subject</th>
+<th>PT-1 (30)</th>
+<th>HY (70)</th>
+<th>100</th>
+<th>PT-2 (30)</th>
+<th>Annual (70)</th>
+<th>100</th>
+<th>Total (200)</th>
+</tr>
+<tbody id="subjects"></tbody>
+</table>
+</div>
+
+<h2>Other Skills / Activities (Grade Only)</h2>
+<div class="table-wrap">
+<table>
+<tr><th>Activity</th><th>PT 1</th><th>PT 2</th></tr>
+<tr><td>Attendance</td><td><input id="att_pt1"></td><td><input id="att_pt2"></td></tr>
+<tr><td>Discipline</td><td><input id="disc_pt1"></td><td><input id="disc_pt2"></td></tr>
+<tr><td>Computer</td><td><input id="comp_pt1"></td><td><input id="comp_pt2"></td></tr>
+<tr><td>General Knowledge</td><td><input id="gk_pt1"></td><td><input id="gk_pt2"></td></tr>
+<tr><td>Drawing</td><td><input id="Draw_pt1"></td><td><input id="Draw_pt2"></td></tr>
+<tr><td>Health & Physical Education</td><td><input id="Hpe_pt1"></td><td><input id="Hpe_pt2"></td></tr>
+</table>
+</div>
+
+<div class="actions">
+<button onclick="calculate()">Calculate</button>
+<button onclick="window.print()">Download / Print</button>
+</div>
+
+<div class="result-box">
+<p><b>Grand Total:</b> <span id="grand">0</span> / 1200</p>
+<p><b>Percentage:</b> <span id="percent">0</span>%</p>
+<p><b>Grade:</b> <span id="grade">-</span></p>
+</div>
+
+<div class="sign">
+  <div class="sign-box">
+    <p>Class Teacher</p>
+    <div class="line"></div>
+    <span>Signature</span>
+  </div>
+  <div class="sign-box">
+    <p>Principal</p>
+    <div class="line"></div>
+    <span>Signature</span>
+  </div>
+  <div class="sign-box">
+    <p>School Stamp</p>
+    <div class="stamp"></div>
+  </div>
+</div>
+
+</div>
+<p>Madeby: Tejbuziup by Prikshit</p>
+<script>
+const subjects=["Hindi","English","Math","Science","SST","Sanskrit"];
+const tbody=document.getElementById("subjects");
+
+subjects.forEach((s,i)=>{
+ tbody.innerHTML+=`
+ <tr>
+ <td>${s}</td>
+ <td><input id="p1${i}"></td>
+ <td><input id="hy${i}"></td>
+ <td id="t1${i}">0</td>
+ <td><input id="p2${i}"></td>
+ <td><input id="an${i}"></td>
+ <td id="t2${i}">0</td>
+ <td id="tot${i}">0</td>
+ </tr>
+ <tr class="sub-result">
+ <td colspan="8" id="res${i}">Result: 0 / 200 | Percentage: 0% | Grade: -</td>
+ </tr>`;
+});
+
+function v(id){return Number(document.getElementById(id).value)||0;}
+function grade(p){
+ if(p>=91) return "A1";
+ if(p>=81) return "A2";
+ if(p>=71) return "B1";
+ if(p>=61) return "B2";
+ if(p>=51) return "C1";
+ if(p>=41) return "C2";
+ if(p>=33) return "D";
+ return "E";
+}
+
+function calculate(){
+ let grand=0;
+ subjects.forEach((_,i)=>{
+  let t1=Math.min(v("p1"+i)+v("hy"+i),100);
+  let t2=Math.min(v("p2"+i)+v("an"+i),100);
+  let tot=t1+t2;
+  let per=(tot/200*100).toFixed(2);
+  document.getElementById("t1"+i).innerText=t1;
+  document.getElementById("t2"+i).innerText=t2;
+  document.getElementById("tot"+i).innerText=tot;
+  document.getElementById("res"+i).innerText=
+   `Result: ${tot} / 200 | Percentage: ${per}% | Grade: ${grade(per)}`;
+  grand+=tot;
+ });
+ let per=(grand/1200*100).toFixed(2);
+ document.getElementById("grand").innerText=grand;
+ document.getElementById("percent").innerText=per;
+ document.getElementById("grade").innerText=grade(per);
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>School Marksheet</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  font-family:'Poppins',Arial,sans-serif;
+  background:linear-gradient(120deg,#a1c4fd,#c2e9fb);
+  padding:10px;
+}
+.container{
+  max-width:1100px;
+  margin:auto;
+  background:#fff;
+  padding:20px;
+  border-radius:15px;
+  box-shadow:0 8px 25px rgba(0,0,0,.3);
+}
+
+/* HEADER */
+.school-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:3px solid #4f46e5;
+  padding-bottom:15px;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.school-header img{height:80px;}
+.school-title{
+  flex:1;
+  text-align:center;
+}
+.school-title h1{
+  margin:0;
+  color:#1e3a8a;
+  font-size:32px;
+}
+.school-title h2{
+  margin:2px 0;
+  font-size:13px;
+}
+.school-title h4{
+  margin-top:5px;
+  font-size:15px;
+}
+
+/* STUDENT DETAILS + PHOTO */
+.student-details{
+  display:flex;
+  gap:15px;
+  margin-bottom:15px;
+}
+.student-details .info{
+  flex:2;
+  display:flex;
+  gap:15px;
+}
+.student-details .info div{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.student-details label{
+  font-weight:600;
+  font-size:13px;
+}
+.student-details input{
+  padding:6px;
+  border:1px solid #ccc;
+  border-radius:5px;
+  font-size:14px;
+}
+
+/* PHOTO BOX */
+.photo-box{
+  width:140px;
+  text-align:center;
+}
+.photo-box img{
+  width:120px;
+  height:150px;
+  border:2px solid #000;
+  object-fit:cover;
+}
+.photo-box input{
+  margin-top:5px;
+  font-size:12px;
+}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:15px;
+  min-width:800px;
+}
+th,td{
+  border:1px solid #ccc;
+  padding:7px;
+  text-align:center;
+  font-size:14px;
+}
+th{
+  background:#4f46e5;
+  color:#fff;
+}
+table input{
+  width:60px;
+  padding:4px;
+  text-align:center;
+}
+
+/* BUTTONS */
+.actions{
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  margin-top:25px;
+  flex-wrap:wrap;
+}
+button{
+  padding:12px 30px;
+  border:none;
+  border-radius:8px;
+  background:#4f46e5;
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
+}
+button:hover{background:#3730a3;}
+
+/* RESULT + SIGN */
+.signature-container{
+  display:flex;
+  gap:25px;
+  margin-top:30px;
+  flex-wrap:wrap;
+}
+.result-box{
+  width:220px;
+  border:2px solid #4f46e5;
+  border-radius:12px;
+  background:#eef2ff;
+  padding:15px;
+  font-weight:600;
+  text-align:center;
+}
+.sign{
+  flex:1;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:40px;
+}
+.sign-box{text-align:center;}
+.line{
+  height:60px;
+  border-bottom:2px solid #000;
+  margin:0 20px;
+}
+
+/* FOOTER */
+.footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:13px;
+  color:#555;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .student-details{flex-direction:column;}
+  .student-details .info{flex-direction:column;}
+  .photo-box{margin:auto;}
+  .sign{grid-template-columns:1fr;}
+  table{min-width:600px;}
+}
+
+/* PRINT */
+@media print{
+  button,input[type=file]{display:none;}
+  input{border:none;}
+}
+</style>
+</head>
+
+<body>
+<div class="container" id="printArea">
+
+<!-- HEADER -->
+<div class="school-header">
+  <img src="logo.png" alt="School Logo">
+  <div class="school-title">
+    <h1>Delhi Public Senior Secondary School</h1>
+    <h2>Near Toll Plaza Chhapar, Mzn – 251307 | 9997175372</h2>
+    <h2>Email: thedelhipublicsrsecschool@gmail.com</h2>
+    <h4>Annual Examination Report Card</h4>
+  </div>
+</div>
+  <!-- CLASS LOGIN -->
+<div class="class-login">
+ <input id="loginClass" placeholder="Class (e.g. 10A)">
+<input id="loginPass" type="password" placeholder="Class Password">
+  <button onclick="loginClass()">Open Class</button>
+</div>
+
+
+<!-- STUDENT DETAILS -->
+<h3>Student Details</h3>
+<div class="student-details">
+  <div class="info">
+    <div>
+      <label>Name</label>
+<input type="text" id="sname">
+
+<label>Mother</label>
+<input type="text" id="mname">
+
+<label>Father</label>
+<input type="text" id="fname">
+    </div>
+    <div>
+      <label>Roll No.</label><input type="text">
+      <label>Class</label><input type="text">
+      <label>DOB</label><input type="date">
+    </div>
+  </div>
+
+  <!-- PHOTO -->
+  <div class="photo-box">
+    <img id="photoPreview" src="">
+    <input type="file" accept="image/*" onchange="loadPhoto(event)">
+    <div>Student Photo</div>
+  </div>
+</div>
+
+<!-- MARKS TABLE -->
+<h3>Academic Marks</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Subject</th>
+<th>PT-1</th>
+<th>HY</th>
+<th>M.O</th>
+<th>PT-2</th>
+<th>Annual</th>
+<th>M.O</th>
+<th>Total</th>
+</tr>
+</thead>
+<tbody id="subjects"></tbody>
+</table>
+</div>
+  
+<h2>Other Skills / Activities (Grade Only)</h2>
+<div class="table-wrap">
+<table>
+<tr><th>Activity</th><th>PT 1</th><th>PT 2</th></tr>
+<tr><td>Attendance</td><td><input id="att_pt1"></td><td><input id="att_pt2"></td></tr>
+<tr><td>Discipline</td><td><input id="disc_pt1"></td><td><input id="disc_pt2"></td></tr>
+<tr><td>Computer</td><td><input id="comp_pt1"></td><td><input id="comp_pt2"></td></tr>
+<tr><td>General Knowledge</td><td><input id="gk_pt1"></td><td><input id="gk_pt2"></td></tr>
+<tr><td>Drawing</td><td><input id="Draw_pt1"></td><td><input id="Draw_pt2"></td></tr>
+<tr><td>Health & Physical Education</td><td><input id="Hpe_pt1"></td><td><input id="Hpe_pt2"></td></tr>
+</table>
+</div>
+<!-- BUTTONS -->
+<div class="actions">
+  <button onclick="calculate()">Calculate</button>
+  <button onclick="saveData()">Save</button>
+  <button onclick="loadData()">Open</button>
+  <button onclick="window.print()">Print</button>
+</div>
+
+<!-- RESULT + SIGN -->
+<div class="signature-container">
+  <div class="result-box">
+    <p>Grand Total: <span id="grand">0</span>/1200</p>
+    <p>Percentage: <span id="percent">0</span>%</p>
+    <p>Grade: <span id="grade">-</span></p>
+  </div>
+
+  <div class="sign">
+    <div class="sign-box">
+      <p>Class Teacher</p>
+      <div class="line"></div>
+    </div>
+    <div class="sign-box">
+      <p>Principal</p>
+      <div class="line"></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">Made by <b>TejbuziUPS</b></div>
+</div>
+
+<script>
+let activeClass="";
+let photoData="";
+
+/* SUBJECTS */
+const subjects=["Hindi","English","Math","Science","SST","Sanskrit"];
+const tbody=document.getElementById("subjects");
+
+subjects.forEach((s,i)=>{
+ tbody.innerHTML+=`
+ <tr>
+ <td>${s}</td>
+ <td><input id="p1${i}"></td>
+ <td><input id="hy${i}"></td>
+ <td>100</td>
+ <td id="t1${i}">0</td>
+ <td><input id="p2${i}"></td>
+ <td><input id="an${i}"></td>
+ <td>100</td>
+ <td id="t2${i}">0</td>
+ <td id="tot${i}">0</td>
+ </tr>
+ <tr class="sub-result">
+ <td colspan="10" id="res${i}">Result: 0 / 200 | Percentage: 0% | Grade: -</td>
+ </tr>`;
+});
+
+/* PHOTO PREVIEW */
+function loadPhoto(e){
+ const reader=new FileReader();
+ reader.onload=()=>{
+   photoData=reader.result;
+   document.getElementById("photoPreview").src=photoData;
+ };
+ reader.readAsDataURL(e.target.files[0]);
+}
+
+function loginClass(){
+  const cls=document.getElementById("loginClass").value;
+  const pass=document.getElementById("loginPass").value;
+
+  if(!cls || !pass){
+    alert("Class & password required");
+    return;
+  }
+
+  const key="PASS_"+cls;
+
+  if(!localStorage.getItem(key)){
+    localStorage.setItem(key,pass);
+    alert("New class created");
+  }
+
+  if(localStorage.getItem(key)!==pass){
+    alert("Wrong password");
+    return;
+  }
+
+  activeClass=cls;
+  document.getElementById("classShow").value=cls;
+  alert("Class "+cls+" opened");
+}
+
+
+/* HELPERS */
+function v(id){return Number(document.getElementById(id).value)||0;}
+function grade(p){
+  if(p>=91) return"A1";
+  if(p>=81) return"A2";
+  if(p>=71) return"B1";
+  if(p>=61) return"B2";
+  if(p>=51) return"C1";
+  if(p>=41) return"C2";
+  if(p>=33) return"D";
+  return"E";
+}
+
+function calculate(){
+ let grand=0;
+
+ subjects.forEach((_,i)=>{
+  let total=
+    (Number(document.getElementById("p1"+i).value)||0)+
+    (Number(document.getElementById("hy"+i).value)||0)+
+    (Number(document.getElementById("p2"+i).value)||0)+
+    (Number(document.getElementById("an"+i).value)||0);
+
+  if(total>200) total=200;
+
+  document.getElementById("tot"+i).innerText=total;
+  grand+=total;
+ });
+
+ let per=(grand/1200*100).toFixed(2);
+ document.getElementById("grand").innerText=grand;
+ document.getElementById("percent").innerText=per;
+ document.getElementById("grade").innerText=grade(per);
+}
+
+  
+function saveData(){
+ if(!activeClass){
+  alert("Open class first");
+  return;
+ }
+
+ const key=activeClass+"_"+roll.value;
+
+ const data={
+  sname:sname.value,
+  mname:mname.value,
+  fname:fname.value,
+  roll:roll.value,
+  dob:dob.value,
+  photo:photoData,
+  marks:subjects.map((_,i)=>({
+    p1:document.getElementById("p1"+i).value,
+    hy:document.getElementById("hy"+i).value,
+    p2:document.getElementById("p2"+i).value,
+    an:document.getElementById("an"+i).value
+  }))
+ };
+
+ localStorage.setItem(key,JSON.stringify(data));
+ alert("Saved");
+}
+
+/* LOAD */
+function loadData(){
+ if(!activeClass){
+  alert("Open class first");
+  return;
+ }
+
+ const key=activeClass+"_"+roll.value;
+ const d=JSON.parse(localStorage.getItem(key));
+
+ if(!d){
+  alert("No data found");
+  return;
+ }
+
+ sname.value=d.sname;
+ mname.value=d.mname;
+ fname.value=d.fname;
+ dob.value=d.dob;
+ document.getElementById("photoPreview").src=d.photo;
+ photoData=d.photo;
+
+ d.marks.forEach((m,i)=>{
+  document.getElementById("p1"+i).value=m.p1;
+  document.getElementById("hy"+i).value=m.hy;
+  document.getElementById("p2"+i).value=m.p2;
+  document.getElementById("an"+i).value=m.an;
+ });
+
+ calculate();
+}
+
+</script>
+</body>
+</html>

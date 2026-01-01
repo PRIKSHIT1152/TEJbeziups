@@ -5,135 +5,100 @@
 <title>School Marksheet</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body{font-family:Poppins,Arial;background:linear-gradient(120deg,#a1c4fd,#c2e9fb);padding:10px;}
-.container{max-width:1100px;margin:auto;background:#fff;padding:15px;border-radius:10px;box-shadow:0 5px 15px rgba(0,0,0,.3);}
-.school-header{display:flex;align-items:center;border-bottom:3px solid #4f46e5;padding-bottom:12px;flex-wrap:wrap;gap:10px;}
-.school-header img{height:60px;}
-.school-title{text-align:center;flex:1;}
-.school-title h1{margin:0;color:#1e3a8a;font-size:20px;}
+body{font-family:'Poppins',Arial,sans-serif;background:linear-gradient(120deg,#a1c4fd,#c2e9fb);padding:10px;}
+.container{max-width:1100px;margin:auto;background:#fff;padding:20px;border-radius:15px;box-shadow:0 8px 25px rgba(0,0,0,.3);}
+.school-header{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #4f46e5;padding-bottom:15px;gap:10px;flex-wrap:wrap;}
+.school-header img{height:80px;}
+.school-title{flex:1;text-align:center;}
+.school-title h1{margin:0;color:#1e3a8a;font-size:32px;}
 .school-title h2{margin:2px 0;font-size:13px;}
-.school-title h4{margin-top:4px;font-size:15px;}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
-label{font-weight:600;font-size:12px;}
-input,select{width:100%;padding:5px;border-radius:5px;border:1px solid #ccc;font-size:12px;}
+.school-title h4{margin-top:5px;font-size:15px;}
+.student-details{display:flex;gap:15px;margin-bottom:15px;}
+.student-details .info{flex:2;display:flex;gap:15px;}
+.student-details .info div{flex:1;display:flex;flex-direction:column;gap:6px;}
+.student-details label{font-weight:600;font-size:13px;}
+.student-details input{padding:6px;border:1px solid #ccc;border-radius:5px;font-size:14px;}
+.photo-box{width:140px;text-align:center;}
+.photo-box img{width:120px;height:150px;border:2px solid #000;object-fit:cover;}
+.photo-box input{margin-top:5px;font-size:12px;}
 .table-wrap{overflow-x:auto;}
-table{width:100%;border-collapse:collapse;margin-top:15px;}
-th,td{border:1px solid #ccc;padding:4px;text-align:center;font-size:12px;}
+table{width:100%;border-collapse:collapse;margin-top:15px;min-width:800px;}
+th,td{border:1px solid #ccc;padding:7px;text-align:center;font-size:14px;}
 th{background:#4f46e5;color:#fff;}
-.sub-result{background:#eef2ff;font-weight:600;color:#1e3a8a;font-size:11px;}
-.actions{text-align:center;margin-top:15px;}
-button{padding:10px 20px;border:none;border-radius:6px;background:#4f46e5;color:#fff;margin:3px;cursor:pointer;font-size:12px;}
-.result-box{margin-top:8px;padding:10px;border:2px solid #4f46e5;border-radius:10px;background:#eef2ff;font-size:13px;}
-.sign{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:30px;text-align:center;}
-.line{height:50px;border-bottom:2px solid #000;margin:0 10px;}
-.stamp{width:70px;height:70px;border:2px dashed #000;border-radius:50%;margin:5px auto;}
-#teacherPass,#teacherLoginBtn{display:inline;}
-@media print{
- body,html{margin:0;padding:0;background:#fff;}
- .container{
-   width:210mm;height:297mm;
-   padding:10mm;
-   box-sizing:border-box;
-   border-radius:0;
-   box-shadow:none;
-   page-break-after:always;
- }
- .table-wrap{overflow:visible;}
- .actions button, #teacherPass,#teacherLoginBtn{display:none;}
- h1,h2,h3,h4,p,label{font-size:12px !important;}
- table, th, td{font-size:12px !important; page-break-inside:avoid !important;}
-}
-/* Table ko chhota aur compact karne ke liye */
-table, th, td {
-  font-size: 10px;  /* font chhota karo */
-  padding: 3px 4px; /* padding kam karo */
-}
-
-/* Print ke liye aur compact */
-@media print {
-  table, th, td {
-    font-size: 9px !important;
-    padding: 2px 3px !important;
-  }
-}
-/* Table ko chhota aur compact karne ke liye */
-table, th, td {
-  font-size: 10px;     /* font chhota karo */
-  padding: 2px 4px;    /* horizontal aur vertical padding kam karo */
-}
-
-/* Columns ko thoda narrow karo */
-table th, table td {
-  max-width: 50px;     /* column width kam karo */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.table-wrap table:last-of-type {
-  width: 100%;
-  font-size: 11px;
-  border-collapse: collapse;
-  text-align: center;
-}
-.table-wrap table:last-of-type th,
-.table-wrap table:last-of-type td {
-  border: 1px solid #ccc;
-  padding: 4px 6px;
-}
-
-/* Print me aur compact */
-@media print {
-  table, th, td {
-    font-size: 9px !important;
-    padding: 1px 3px !important;
-  }
-  table th, table td {
-    max-width: 50px !important;
-  }
-}
-
+table input{width:60px;padding:4px;text-align:center;}
+.actions{display:flex;justify-content:center;gap:15px;margin-top:25px;flex-wrap:wrap;}
+button{padding:12px 30px;border:none;border-radius:8px;background:#4f46e5;color:#fff;font-size:16px;cursor:pointer;}
+button:hover{background:#3730a3;}
+.signature-container{display:flex;gap:25px;margin-top:30px;flex-wrap:wrap;}
+.result-box{width:220px;border:2px solid #4f46e5;border-radius:12px;background:#eef2ff;padding:15px;font-weight:600;text-align:center;}
+.sign{flex:1;display:grid;grid-template-columns:repeat(2,1fr);gap:40px;}
+.sign-box{text-align:center;}
+.line{height:60px;border-bottom:2px solid #000;margin:0 20px;}
+.footer{text-align:center;margin-top:20px;font-size:13px;color:#555;}
+@media(max-width:768px){.student-details{flex-direction:column;}.student-details .info{flex-direction:column;}.photo-box{margin:auto;}.sign{grid-template-columns:1fr;}table{min-width:600px;}}
+@media print{button,input[type=file]{display:none;}input{border:none;}}
 </style>
 </head>
 <body>
-
 <div class="container" id="printArea">
 
+<!-- HEADER -->
 <div class="school-header">
-<img src="logo.png">
+<img src="logo.png" alt="School Logo">
 <div class="school-title">
 <h1>Delhi Public Senior Secondary School</h1>
-<h2>Near Toll Plaza Chhapar, Mzn, 251307</h2>
+<h2>Near Toll Plaza Chhapar, Mzn – 251307 | 9997175372</h2>
+<h2>Email: thedelhipublicsrsecschool@gmail.com</h2>
 <h4>Annual Examination Report Card</h4>
 </div>
 </div>
+<!-- PASSWORD LOCK -->
+<!-- CLASS LOGIN -->
+<!-- CLASS LOGIN -->
+<div class="class-login">
+  <input id="loginClass" placeholder="Class (e.g. 10A)">
+  <input id="loginPass" type="password" placeholder="Class Password">
+  <button onclick="loginClass()">Open Class</button>
+</div>
 
+
+<!-- STUDENT DETAILS -->
 <h3>Student Details</h3>
-<div class="grid">
-<div><label>Name</label><input id="name"></div>
-<div><label>Father</label><input id="father"></div>
-<div><label>Mother</label><input id="mother"></div>
-<div><label>DOB</label><input type="date" id="dob"></div>
-<div><label>Roll</label><input id="roll"></div>
+<div class="student-details">
+<div class="info">
 <div>
-<label>Class</label>
-<select id="classSelect">
-<option value="">Select</option>
-<option>1</option><option>2</option><option>3</option>
-<option>4</option><option>5</option><option>6</option>
-<option>7</option><option>8</option>
-<option>9</option><option>10</option>
-</select>
+<label>Name</label><input type="text" id="sname">
+<label>Mother</label><input type="text" id="mname">
+<label>Father</label><input type="text" id="fname">
 </div>
-<div><label>Teacher Name</label><input id="teacherName" disabled></div>
+<div>
+<label>Roll No.</label>
+<input type="text" id="roll">
+
+<label>Class</label>
+<input type="text" id="classShow" readonly>
+
+<label>DOB</label>
+<input type="date" id="dob">
+
+</div>
+</div>
+<div class="photo-box">
+<img id="photoPreview" src="">
+<input type="file" accept="image/*" onchange="loadPhoto(event)">
+<div>Student Photo</div>
+</div>
 </div>
 
+<!-- MARKS TABLE -->
 <h3>Academic Marks</h3>
 <div class="table-wrap">
 <table>
+<thead>
 <tr>
-<th>Subject</th><th>PT-1 (30)</th><th>HY (70)</th><th>100</th>
-<th>PT-2 (30)</th><th>Annual (70)</th><th>100</th><th>Total</th>
+<th>Subject</th><th>PT1</th><th>HY</th><th>PT1+HY</th><th>PT2</th><th>AN</th><th>PT2+AN</th><th>Total</th>
 </tr>
+</thead>
 <tbody id="subjects"></tbody>
 </table>
 </div>
@@ -141,7 +106,7 @@ table th, table td {
 <h2>Other Skills / Activities (Grade Only)</h2>
 <div class="table-wrap">
 <table>
-<tr><th>Activity</th><th>PT 1</th><th>PT 2</th></tr>
+<tr><th>Activity</th><th>PT1</th><th>PT2</th></tr>
 <tr><td>Attendance</td><td><input id="att_pt1"></td><td><input id="att_pt2"></td></tr>
 <tr><td>Discipline</td><td><input id="disc_pt1"></td><td><input id="disc_pt2"></td></tr>
 <tr><td>Computer</td><td><input id="comp_pt1"></td><td><input id="comp_pt2"></td></tr>
@@ -152,199 +117,137 @@ table th, table td {
 </div>
 
 <div class="actions">
-<input type="password" id="teacherPass" placeholder="Teacher Password">
-<button id="teacherLoginBtn" onclick="teacherLogin()">Login</button>
-<button onclick="teacherLogout()">Logout</button>
+<button onclick="calculate()">Calculate</button>
+<button onclick="saveData()">Save</button>
+<button onclick="loadData()">Open</button>
+<button onclick="window.print()">Print</button>
 </div>
 
-<div class="actions">
-<button onclick="window.print()">Print</button>
+<div class="signature-container">
 <div class="result-box">
-<p><b>Grand Total:</b> <span id="grand">0</span> / 1200</p>
-<p><b>Percentage:</b> <span id="percent">0</span>%</p>
-<p><b>Grade:</b> <span id="grade">-</span></p>
-<p><b>Teacher:</b> <span id="printTeacher">-</span></p>
+<p>Grand Total: <span id="grand">0</span>/1200</p>
+<p>Percentage: <span id="percent">0</span>%</p>
+<p>Grade: <span id="grade">-</span></p>
 </div>
 <div class="sign">
-<div><p>Class Teacher</p><div class="line"></div></div>
-<div><p>Principal</p><div class="line"></div></div>
-<div><p>School Stamp</p><div class="stamp"></div></div>
+<div class="sign-box">
+<p>Class Teacher</p><div class="line"></div>
+</div>
+<div class="sign-box">
+<p>Principal</p><div class="line"></div>
 </div>
 </div>
 </div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<div class="footer">Made by <b>TejbuziUPS</b></div>
+</div>
 <script>
-const subjects=["Hindi","English","Math","EVS/Science","SST","Sanskrit"];
-const tbody=document.getElementById("subjects");
-const CLASS_PASSWORDS = {"1":"1111","2":"2222","3":"3333","4":"4444","5":"5555","6":"6666","7":"7777","8":"8888","9":"9999","10":"1010"};
-const MASTER_PASSWORD = "MASTER@123";
+let activeClass = "";
+let photoData = "";
+const subjects = ["Hindi", "English", "Math", "Science", "SST", "Sanskrit"];
+const tbody = document.getElementById("subjects");
 
-subjects.forEach((s,i)=>{
- tbody.innerHTML+=`
- <tr>
- <td>${s}</td>
- <td><input id="p1${i}" type="number" min="0" max="30"></td>
- <td><input id="hy${i}" type="number" min="0" max="70"></td>
- <td id="t1${i}">0</td>
- <td><input id="p2${i}" type="number" min="0" max="30"></td>
- <td><input id="an${i}" type="number" min="0" max="70"></td>
- <td id="t2${i}">0</td>
- <td id="tot${i}">0</td>
- </tr>
- <tr class="sub-result">
- <td colspan="8" id="res${i}">Result: 0 / 200 | Percentage: 0% | Grade: -</td>
- </tr>`;
+// Generate subjects table
+subjects.forEach((s, i) => {
+  tbody.innerHTML += `<tr>
+    <td>${s}</td>
+    <td><input type="number" id="p1${i}" min="0" max="30"></td>
+    <td><input type="number" id="hy${i}" min="0" max="70"></td>
+    <td id="ph_total${i}">0</td>
+    <td><input type="number" id="p2${i}" min="0" max="30"></td>
+    <td><input type="number" id="an${i}" min="0" max="70"></td>
+    <td id="pa_total${i}">0</td>
+    <td id="tot${i}">0</td>
+  </tr>`;
 });
 
-// helper
-function v(id,max){
- let el=document.getElementById(id);
- let val=Number(el.value)||0;
- if(val>max){ el.value=max; val=max; }
- if(val<0){ el.value=0; val=0; }
- return val;
-}
-
+// Utility functions
+function v(id){ return Number(document.getElementById(id).value)||0; }
 function grade(p){
- if(p>=91) return "A1";
- if(p>=81) return "A2";
- if(p>=71) return "B1";
- if(p>=61) return "B2";
- if(p>=51) return "C1";
- if(p>=41) return "C2";
- if(p>=33) return "D";
- return "E";
+  if(p>=91) return "A1";
+  if(p>=81) return "A2";
+  if(p>=71) return "B1";
+  if(p>=61) return "B2";
+  if(p>=51) return "C1";
+  if(p>=41) return "C2";
+  if(p>=33) return "D";
+  return "E";
 }
 
-// calculate
+// Calculate marks
 function calculate(){
- let grand=0;
- subjects.forEach((_,i)=>{
-  let t1=v("p1"+i,30)+v("hy"+i,70);
-  let t2=v("p2"+i,30)+v("an"+i,70);
-  let tot=t1+t2;
-  let per=(tot/200*100).toFixed(2);
-  document.getElementById("t1"+i).innerText=t1;
-  document.getElementById("t2"+i).innerText=t2;
-  document.getElementById("tot"+i).innerText=tot;
-  document.getElementById("res"+i).innerText=
-   `Result: ${tot} / 200 | Percentage: ${per}% | Grade: ${grade(per)}`;
-  grand+=tot;
- });
- let per=(grand/1200*100).toFixed(2);
- document.getElementById("grand").innerText=grand;
- document.getElementById("percent").innerText=per;
- document.getElementById("grade").innerText=grade(per);
- document.getElementById("printTeacher").innerText=document.getElementById("teacherName").value || "-";
+  let grand = 0;
+  subjects.forEach((_,i)=>{
+    let ph = v("p1"+i)+v("hy"+i); if(ph>100) ph=100; document.getElementById("ph_total"+i).innerText=ph;
+    let pa = v("p2"+i)+v("an"+i); if(pa>100) pa=100; document.getElementById("pa_total"+i).innerText=pa;
+    let total = ph+pa; if(total>200) total=200; document.getElementById("tot"+i).innerText=total;
+    grand += total;
+  });
+  let per = ((grand/(subjects.length*200))*100).toFixed(2);
+  document.getElementById("grand").innerText = grand;
+  document.getElementById("percent").innerText = per;
+  document.getElementById("grade").innerText = grade(per);
 }
 
-// storage
-function storageKey(){
- let c=document.getElementById("classSelect").value || "X";
- let r=document.getElementById("roll").value || "X";
- return "MARKSHEET_"+c+"_"+r;  // ये हर student/class के लिए unique key
+// Load photo
+function loadPhoto(e){
+  const reader = new FileReader();
+  reader.onload = ()=>{ photoData = reader.result; document.getElementById("photoPreview").src = photoData; }
+  reader.readAsDataURL(e.target.files[0]);
 }
 
-function saveNow(){
-    const cls = document.getElementById("classSelect").value;
-    if(!cls){ alert("Select class"); return; }
-
-    const data = [];
-    subjects.forEach((_, i) => {
-        let t1 = v("p1"+i,30) + v("hy"+i,70);
-        let t2 = v("p2"+i,30) + v("an"+i,70);
-        data.push(t1 + t2); // total marks per subject
-    });
-
-    // class-wise key
-    localStorage.setItem(cls+"_data", JSON.stringify(data));
-    alert("Class " + cls + " data saved!");
+// Class login
+function loginClass(){
+  const cls = document.getElementById("loginClass").value.trim();
+  const pass = document.getElementById("loginPass").value;
+  if(!cls || !pass){ alert("Class aur password dono dalo"); return; }
+  const key = "CLASS_PASS_" + cls;
+  if(!localStorage.getItem(key)){ localStorage.setItem(key, pass); alert("Class password set ho gaya"); }
+  if(localStorage.getItem(key) !== pass){ alert("Wrong password"); return; }
+  activeClass = cls;
+  document.getElementById("classShow").value = cls;
+  alert("Class " + cls + " unlocked");
 }
 
+// Save student data
+function saveData(){
+  if(!activeClass){ alert("Open class first"); return; }
+  const key = activeClass+"_"+roll.value;
+  const data = {
+    sname:sname.value, mname:mname.value, fname:fname.value, roll:roll.value, dob:dob.value, photo:photoData,
+    marks:subjects.map((_,i)=>({p1:v("p1"+i), hy:v("hy"+i), p2:v("p2"+i), an:v("an"+i)})),
+    skills:{
+      att_pt1:v("att_pt1"), att_pt2:v("att_pt2"),
+      disc_pt1:v("disc_pt1"), disc_pt2:v("disc_pt2"),
+      comp_pt1:v("comp_pt1"), comp_pt2:v("comp_pt2"),
+      gk_pt1:v("gk_pt1"), gk_pt2:v("gk_pt2"),
+      Draw_pt1:v("Draw_pt1"), Draw_pt2:v("Draw_pt2"),
+      Hpe_pt1:v("Hpe_pt1"), Hpe_pt2:v("Hpe_pt2")
+    }
+  };
+  localStorage.setItem(key, JSON.stringify(data));
+  alert("Saved successfully!");
+}
+
+// Load student data
 function loadData(){
- const d=JSON.parse(localStorage.getItem(storageKey()));
- if(!d) return;
- Object.keys(d).forEach(id=>{
-  if(document.getElementById(id))
-   document.getElementById(id).value=d[id];
- });
- calculate();
+  if(!activeClass){ alert("Open class first"); return; }
+  const key = activeClass+"_"+roll.value;
+  const d = JSON.parse(localStorage.getItem(key));
+  if(!d){ alert("No data found"); return; }
+
+  sname.value=d.sname; mname.value=d.mname; fname.value=d.fname; dob.value=d.dob;
+  document.getElementById("photoPreview").src=d.photo; photoData=d.photo;
+  d.marks.forEach((m,i)=>{ document.getElementById("p1"+i).value=m.p1; document.getElementById("hy"+i).value=m.hy; document.getElementById("p2"+i).value=m.p2; document.getElementById("an"+i).value=m.an; });
+  document.getElementById("att_pt1").value=d.skills.att_pt1; document.getElementById("att_pt2").value=d.skills.att_pt2;
+  document.getElementById("disc_pt1").value=d.skills.disc_pt1; document.getElementById("disc_pt2").value=d.skills.disc_pt2;
+  document.getElementById("comp_pt1").value=d.skills.comp_pt1; document.getElementById("comp_pt2").value=d.skills.comp_pt2;
+  document.getElementById("gk_pt1").value=d.skills.gk_pt1; document.getElementById("gk_pt2").value=d.skills.gk_pt2;
+  document.getElementById("Draw_pt1").value=d.skills.Draw_pt1; document.getElementById("Draw_pt2").value=d.skills.Draw_pt2;
+  document.getElementById("Hpe_pt1").value=d.skills.Hpe_pt1; document.getElementById("Hpe_pt2").value=d.skills.Hpe_pt2;
+
+  calculate();
 }
-
-// clear
-function clearAll(){
- if(confirm("Clear this student's data?")){
-  localStorage.removeItem(storageKey());
-  location.reload();
- }
-}
-
-// lock/unlock fields
-function lockAll(lock=true){
- document.querySelectorAll("input,select").forEach(i=>{
-   if(i.id !== "classSelect") i.disabled = lock;
- });
- document.getElementById("teacherPass").disabled = false;
- document.getElementById("teacherName").disabled = true;
-}
-
-// login
-function teacherLogin(){
- const cls = document.getElementById("classSelect").value;
- const pass = document.getElementById("teacherPass").value;
-
- if(!cls){
-   alert("Select class first");
-   return;
- }
-
- if(pass === MASTER_PASSWORD || pass === CLASS_PASSWORDS[cls]){
-   lockAll(false);
-   document.getElementById("teacherPass").style.display="none";
-   document.getElementById("teacherLoginBtn").style.display="none";
-   document.getElementById("teacherName").disabled = false;
-   alert("Login Successful");
-   loadData();
- } else {
-   alert("Wrong password");
- }
-}
-
-// logout
-function teacherLogout(){
- lockAll(true);
- document.getElementById("teacherPass").style.display="inline";
- document.getElementById("teacherLoginBtn").style.display="inline";
- alert("Logged Out");
-}
-
-// export
-function exportExcel(){
- let wb=XLSX.utils.book_new();
- let data = {};
- document.querySelectorAll("input,select").forEach(i=>{
-  if(i.id) data[i.id] = i.value;
- });
- let ws = XLSX.utils.json_to_sheet([data]);
- XLSX.utils.book_append_sheet(wb,ws,"Student");
- XLSX.writeFile(wb,"Student.xlsx");
-}
-
-function exportPDF(){
- html2pdf().from(document.getElementById("printArea")).set({
-  filename: 'Student.pdf',
-  pagebreak: {mode:['avoid-all','css']},
-  html2canvas: {scale:1}
- }).save();
-}
-
-// init
-window.onload = () => { lockAll(true); loadData(); }
-
-// auto-calculate on input
-document.addEventListener("input", e => { if(!document.getElementById("teacherPass").style.display || document.getElementById("teacherPass").style.display=="none") calculate(); });
 </script>
+
 </body>
 </html>

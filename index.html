@@ -19,22 +19,30 @@ body{font-family:'Poppins',Arial,sans-serif;background:linear-gradient(120deg,#a
 .student-details label{font-weight:600;font-size:13px;}
 .student-details input{padding:6px;border:1px solid #ccc;border-radius:5px;font-size:14px;}
 .photo-box{width:140px;text-align:center;}
-.photo-box img{width:120px;height:150px;border:2px solid #000;object-fit:cover;}
-.photo-box input{margin-top:5px;font-size:12px;}
+.photo-box img{width:140px;height:150px;border:1px solid #000;object-fit:cover;}
+.photo-box input{margin-top:3px;font-size:10px;}
 .table-wrap{overflow-x:auto;}
-table{width:100%;border-collapse:collapse;margin-top:15px;min-width:800px;}
-th,td{border:1px solid #ccc;padding:7px;text-align:center;font-size:14px;}
+table{width:100%;border-collapse:collapse;margin-top:15px;min-width:600px;}
+th,td{border:1px solid #ccc;padding:7px;text-align:center;font-size:18px;}
 th{background:#4f46e5;color:#fff;}
 table input{width:60px;padding:4px;text-align:center;}
 .actions{display:flex;justify-content:center;gap:15px;margin-top:25px;flex-wrap:wrap;}
 button{padding:12px 30px;border:none;border-radius:8px;background:#4f46e5;color:#fff;font-size:16px;cursor:pointer;}
 button:hover{background:#3730a3;}
-.signature-container{display:flex;gap:25px;margin-top:30px;flex-wrap:wrap;}
-.result-box{width:220px;border:2px solid #4f46e5;border-radius:12px;background:#eef2ff;padding:15px;font-weight:600;text-align:center;}
-.sign{flex:1;display:grid;grid-template-columns:repeat(2,1fr);gap:40px;}
+.signature-container{display:flex;gap:25px;margin-top:100px;flex-wrap:wrap;}
+.result-box{
+  width:220px;
+  border:2px solid #4f46e5;
+  margin-top:-60px;   /* ← yaha control hai */
+  border-radius:12px;
+  background:#eef2ff;
+  padding:15px;
+  font-weight:600;
+  text-align:center;
+}
+.sign{flex:1;display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
 .sign-box{text-align:center;}
-.line{height:60px;border-bottom:2px solid #000;margin:0 20px;}
-.footer{text-align:center;margin-top:20px;font-size:13px;color:#555;}
+.footer{text-align:center;margin-top:2px;font-size:13px;color:#555;}
 @media(max-width:768px){.student-details{flex-direction:column;}.student-details .info{flex-direction:column;}.photo-box{margin:auto;}.sign{grid-template-columns:1fr;}table{min-width:600px;}}
 @media print{button,input[type=file]{display:none;}input{border:none;}}
 </style>
@@ -52,14 +60,6 @@ button:hover{background:#3730a3;}
 <h4>Annual Examination Report Card</h4>
 </div>
 </div>
-<!-- PASSWORD LOCK -->
-<!-- CLASS LOGIN -->
-<!-- CLASS LOGIN -->
-<div class="class-login">
-  <input id="loginClass" placeholder="Class (e.g. 10A)">
-  <input id="loginPass" type="password" placeholder="Class Password">
-  <button onclick="loginClass()">Open Class</button>
-</div>
 
 
 <!-- STUDENT DETAILS -->
@@ -76,7 +76,7 @@ button:hover{background:#3730a3;}
 <input type="text" id="roll">
 
 <label>Class</label>
-<input type="text" id="classShow" readonly>
+<input type="text" id="classShow">
 
 <label>DOB</label>
 <input type="date" id="dob">
@@ -94,11 +94,21 @@ button:hover{background:#3730a3;}
 <h3>Academic Marks</h3>
 <div class="table-wrap">
 <table>
-<thead>
 <tr>
-<th>Subject</th><th>PT1</th><th>HY</th><th>PT1+HY</th><th>PT2</th><th>AN</th><th>PT2+AN</th><th>Total</th>
+  <th>Subject</th>
+  <th>PT1</th>
+  <th>HY</th>
+  <th>MM</th>
+  <th>PT1+HY</th>
+  <th>Grade</th>
+  <th>PT2</th>
+  <th>AN</th>
+  <th>MM</th>
+  <th>PT2+AN</th>
+  <th>Grade</th>
+  <th>Total</th>
+  <th>Grade</th>
 </tr>
-</thead>
 <tbody id="subjects"></tbody>
 </table>
 </div>
@@ -117,10 +127,10 @@ button:hover{background:#3730a3;}
 </div>
 
 <div class="actions">
-<button onclick="calculate()">Calculate</button>
-<button onclick="saveData()">Save</button>
-<button onclick="loadData()">Open</button>
-<button onclick="window.print()">Print</button>
+  <button onclick="calculate()">Calculate</button>
+  <button onclick="saveDataFirebase()">Save</button>  <!-- Firebase save -->
+  <button onclick="loadDataFirebase()">Open</button>  <!-- Firebase load -->
+  <button onclick="window.print()">Print</button>
 </div>
 
 <div class="signature-container">
@@ -131,122 +141,209 @@ button:hover{background:#3730a3;}
 </div>
 <div class="sign">
 <div class="sign-box">
-<p>Class Teacher</p><div class="line"></div>
+<p>Class Teacher</p>
 </div>
 <div class="sign-box">
-<p>Principal</p><div class="line"></div>
+<p>Principal</p>
 </div>
 </div>
 </div>
 <div class="footer">Made by <b>TejbuziUPS</b></div>
 </div>
-<script>
-let activeClass = "";
-let photoData = "";
-const subjects = ["Hindi", "English", "Math", "Science", "SST", "Sanskrit"];
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { 
+  getStorage, 
+  ref, 
+  uploadBytes, 
+  getDownloadURL 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+
+/* ================= FIREBASE ================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyAiky3fZI3uXeBzuxcfMzmqZKcf4PYlhJg",
+  authDomain: "marksheet-2b925.firebaseapp.com",
+  projectId: "marksheet-2b925",
+  storageBucket: "marksheet-2b925.appspot.com",
+  messagingSenderId: "451257976550",
+  appId: "1:451257976550:web:e42579664dad9a6f78dd27"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+/* ================= SUBJECTS ================= */
+const subjects = ["Hindi","English","Math","Science","SST","Sanskrit"];
 const tbody = document.getElementById("subjects");
 
-// Generate subjects table
-subjects.forEach((s, i) => {
-  tbody.innerHTML += `<tr>
-    <td>${s}</td>
-    <td><input type="number" id="p1${i}" min="0" max="30"></td>
-    <td><input type="number" id="hy${i}" min="0" max="70"></td>
+/* ================= TABLE CREATE ================= */
+subjects.forEach((sub, i) => {
+  tbody.innerHTML += `
+  <tr>
+    <td>${sub}</td>
+    <td><input type="number" id="p1${i}" max="30" oninput="limit(this,30)"></td>
+    <td><input type="number" id="hy${i}" max="70" oninput="limit(this,70)"></td>
+    <td>100</td>
     <td id="ph_total${i}">0</td>
-    <td><input type="number" id="p2${i}" min="0" max="30"></td>
-    <td><input type="number" id="an${i}" min="0" max="70"></td>
+    <td id="ph_grade${i}">-</td>
+
+    <td><input type="number" id="p2${i}" max="30" oninput="limit(this,30)"></td>
+    <td><input type="number" id="an${i}" max="70" oninput="limit(this,70)"></td>
+    <td>100</td>
     <td id="pa_total${i}">0</td>
+    <td id="pa_grade${i}">-</td>
+
     <td id="tot${i}">0</td>
+    <td id="tot_grade${i}">-</td>
   </tr>`;
 });
 
-// Utility functions
-function v(id){ return Number(document.getElementById(id).value)||0; }
-function grade(p){
-  if(p>=91) return "A1";
-  if(p>=81) return "A2";
-  if(p>=71) return "B1";
-  if(p>=61) return "B2";
-  if(p>=51) return "C1";
-  if(p>=41) return "C2";
-  if(p>=33) return "D";
+/* ================= LIMIT ================= */
+window.limit = function(input, max){
+  let v = Number(input.value || 0);
+  if(v > max) input.value = max;
+  if(v < 0) input.value = 0;
+  calculate();
+};
+
+/* ================= HELPER ================= */
+function val(id){
+  return Number(document.getElementById(id)?.value || 0);
+}
+
+/* ================= GRADE ================= */
+function grade(m){
+  if(m >= 91) return "A1";
+  if(m >= 81) return "A2";
+  if(m >= 71) return "B1";
+  if(m >= 61) return "B2";
+  if(m >= 51) return "C1";
+  if(m >= 41) return "C2";
+  if(m >= 33) return "D";
   return "E";
 }
 
-// Calculate marks
-function calculate(){
+/* ================= CALCULATE ================= */
+window.calculate = function(){
   let grand = 0;
-  subjects.forEach((_,i)=>{
-    let ph = v("p1"+i)+v("hy"+i); if(ph>100) ph=100; document.getElementById("ph_total"+i).innerText=ph;
-    let pa = v("p2"+i)+v("an"+i); if(pa>100) pa=100; document.getElementById("pa_total"+i).innerText=pa;
-    let total = ph+pa; if(total>200) total=200; document.getElementById("tot"+i).innerText=total;
+
+  subjects.forEach((_, i)=>{
+    let ph = Math.min(val("p1"+i) + val("hy"+i), 100);
+    let pa = Math.min(val("p2"+i) + val("an"+i), 100);
+    let total = ph + pa;
+
+    document.getElementById("ph_total"+i).innerText = ph;
+    document.getElementById("ph_grade"+i).innerText = grade(ph);
+
+    document.getElementById("pa_total"+i).innerText = pa;
+    document.getElementById("pa_grade"+i).innerText = grade(pa);
+
+    document.getElementById("tot"+i).innerText = total;
+    document.getElementById("tot_grade"+i).innerText = grade((total/200)*100);
+
     grand += total;
   });
-  let per = ((grand/(subjects.length*200))*100).toFixed(2);
-  document.getElementById("grand").innerText = grand;
-  document.getElementById("percent").innerText = per;
-  document.getElementById("grade").innerText = grade(per);
-}
 
-// Load photo
-function loadPhoto(e){
-  const reader = new FileReader();
-  reader.onload = ()=>{ photoData = reader.result; document.getElementById("photoPreview").src = photoData; }
-  reader.readAsDataURL(e.target.files[0]);
-}
+  let percent = ((grand/(subjects.length*200))*100).toFixed(2);
+  document.getElementById("grand").innerText = grand + "/" + (subjects.length*200);
+  document.getElementById("percent").innerText = percent;
+  document.getElementById("grade").innerText = grade(percent);
+};
 
-// Class login
-function loginClass(){
-  const cls = document.getElementById("loginClass").value.trim();
-  const pass = document.getElementById("loginPass").value;
-  if(!cls || !pass){ alert("Class aur password dono dalo"); return; }
-  const key = "CLASS_PASS_" + cls;
-  if(!localStorage.getItem(key)){ localStorage.setItem(key, pass); alert("Class password set ho gaya"); }
-  if(localStorage.getItem(key) !== pass){ alert("Wrong password"); return; }
-  activeClass = cls;
-  document.getElementById("classShow").value = cls;
-  alert("Class " + cls + " unlocked");
-}
+/* ================= PHOTO PREVIEW ================= */
+let selectedPhoto = null;
 
-// Save student data
-function saveData(){
-  if(!activeClass){ alert("Open class first"); return; }
-  const key = activeClass+"_"+roll.value;
-  const data = {
-    sname:sname.value, mname:mname.value, fname:fname.value, roll:roll.value, dob:dob.value, photo:photoData,
-    marks:subjects.map((_,i)=>({p1:v("p1"+i), hy:v("hy"+i), p2:v("p2"+i), an:v("an"+i)})),
-    skills:{
-      att_pt1:v("att_pt1"), att_pt2:v("att_pt2"),
-      disc_pt1:v("disc_pt1"), disc_pt2:v("disc_pt2"),
-      comp_pt1:v("comp_pt1"), comp_pt2:v("comp_pt2"),
-      gk_pt1:v("gk_pt1"), gk_pt2:v("gk_pt2"),
-      Draw_pt1:v("Draw_pt1"), Draw_pt2:v("Draw_pt2"),
-      Hpe_pt1:v("Hpe_pt1"), Hpe_pt2:v("Hpe_pt2")
-    }
+window.loadPhoto = function(event){
+  selectedPhoto = event.target.files[0];
+  if(selectedPhoto){
+    document.getElementById("photoPreview").src =
+      URL.createObjectURL(selectedPhoto);
+  }
+};
+
+/* ================= SAVE ================= */
+window.saveDataFirebase = async function(){
+  const roll = document.getElementById("roll").value.trim();
+  if(!roll) return alert("Roll No required");
+
+  let photoURL = "";
+
+  // 🔥 PHOTO UPLOAD
+  if(selectedPhoto){
+    const photoRef = ref(storage, `studentPhotos/${roll}.jpg`);
+    await uploadBytes(photoRef, selectedPhoto);
+    photoURL = await getDownloadURL(photoRef);
+  }
+
+  const marksData = [];
+  subjects.forEach((s,i)=>{
+    let ph = Math.min(val("p1"+i)+val("hy"+i),100);
+    let pa = Math.min(val("p2"+i)+val("an"+i),100);
+    marksData.push({
+      subject:s,
+      pt1:val("p1"+i),
+      hy:val("hy"+i),
+      pt2:val("p2"+i),
+      an:val("an"+i),
+      total: ph + pa
+    });
+  });
+
+  let grandTotal = marksData.reduce((a,b)=>a+b.total,0);
+  let percent = ((grandTotal/(subjects.length*200))*100).toFixed(2);
+
+  const studentInfo = {
+    name: document.getElementById("sname").value,
+    father: document.getElementById("fname").value,
+    mother: document.getElementById("mname").value,
+    class: document.getElementById("classShow").value,
+    dob: document.getElementById("dob").value,
+    photo: photoURL
   };
-  localStorage.setItem(key, JSON.stringify(data));
-  alert("Saved successfully!");
-}
 
-// Load student data
-function loadData(){
-  if(!activeClass){ alert("Open class first"); return; }
-  const key = activeClass+"_"+roll.value;
-  const d = JSON.parse(localStorage.getItem(key));
-  if(!d){ alert("No data found"); return; }
+  await setDoc(doc(db,"results",roll),{
+    student: studentInfo,
+    marksData,
+    grandTotal,
+    percent,
+    grade: grade(percent)
+  });
 
-  sname.value=d.sname; mname.value=d.mname; fname.value=d.fname; dob.value=d.dob;
-  document.getElementById("photoPreview").src=d.photo; photoData=d.photo;
-  d.marks.forEach((m,i)=>{ document.getElementById("p1"+i).value=m.p1; document.getElementById("hy"+i).value=m.hy; document.getElementById("p2"+i).value=m.p2; document.getElementById("an"+i).value=m.an; });
-  document.getElementById("att_pt1").value=d.skills.att_pt1; document.getElementById("att_pt2").value=d.skills.att_pt2;
-  document.getElementById("disc_pt1").value=d.skills.disc_pt1; document.getElementById("disc_pt2").value=d.skills.disc_pt2;
-  document.getElementById("comp_pt1").value=d.skills.comp_pt1; document.getElementById("comp_pt2").value=d.skills.comp_pt2;
-  document.getElementById("gk_pt1").value=d.skills.gk_pt1; document.getElementById("gk_pt2").value=d.skills.gk_pt2;
-  document.getElementById("Draw_pt1").value=d.skills.Draw_pt1; document.getElementById("Draw_pt2").value=d.skills.Draw_pt2;
-  document.getElementById("Hpe_pt1").value=d.skills.Hpe_pt1; document.getElementById("Hpe_pt2").value=d.skills.Hpe_pt2;
+  alert("Data + Photo Saved ✅");
+};
+
+/* ================= LOAD ================= */
+window.loadDataFirebase = async function(){
+  const roll = document.getElementById("roll").value.trim();
+  if(!roll) return alert("Roll No required");
+
+  const snap = await getDoc(doc(db,"results",roll));
+  if(!snap.exists()) return alert("No Record");
+
+  const data = snap.data();
+
+  data.marksData.forEach((m,i)=>{
+    document.getElementById("p1"+i).value = m.pt1;
+    document.getElementById("hy"+i).value = m.hy;
+    document.getElementById("p2"+i).value = m.pt2;
+    document.getElementById("an"+i).value = m.an;
+  });
+
+  if(data.student){
+    document.getElementById("sname").value = data.student.name || "";
+    document.getElementById("fname").value = data.student.father || "";
+    document.getElementById("mname").value = data.student.mother || "";
+    document.getElementById("classShow").value = data.student.class || "";
+    document.getElementById("dob").value = data.student.dob || "";
+    if(data.student.photo){
+      document.getElementById("photoPreview").src = data.student.photo;
+    }
+  }
 
   calculate();
-}
+};
 </script>
 
 </body>

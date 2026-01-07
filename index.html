@@ -11,12 +11,12 @@ body{font-family:'Poppins',Arial,sans-serif;background:linear-gradient(120deg,#a
 .school-header img{height:80px;}
 .school-title{flex:1;text-align:center;}
 .school-title h1{margin:0;color:#1e3a8a;font-size:32px;}
-.school-title h2{margin:2px 0;font-size:13px;}
-.school-title h4{margin-top:5px;font-size:15px;}
+.school-title h2{margin:2px 0;font-size:20px;}
+.school-title h4{margin-top:5px;font-size:16px;}
 .student-details{display:flex;gap:15px;margin-bottom:15px;}
 .student-details .info{flex:2;display:flex;gap:15px;}
 .student-details .info div{flex:1;display:flex;flex-direction:column;gap:6px;}
-.student-details label{font-weight:600;font-size:13px;}
+.student-details label{font-weight:600;font-size:16px;}
 .student-details input{padding:6px;border:1px solid #ccc;border-radius:5px;font-size:14px;}
 .photo-box{width:140px;text-align:center;}
 .photo-box img{width:140px;height:150px;border:1px solid #000;object-fit:cover;}
@@ -93,20 +93,28 @@ button:hover{background:#3730a3;}
 <h3>Academic Marks</h3>
 <div class="table-wrap">
 <table>
-<tr>
-  <th>Subject</th>
-  <th>PT1</th>
-  <th>HY</th>
-  <th>MM</th>
-  <th>PT1+HY</th>
-  <th>Grade</th>
-  <th>PT2</th>
-  <th>AN</th>
-  <th>MM</th>
-  <th>PT2+AN</th>
-  <th>Grade</th>
-  <th>Total</th>
-  <th>Grade</th>
+  <tr>
+    <h2>
+    <th>Scholastic</th>
+    <th>Term I</th>
+    <th>Term II</th>
+    <th>Overall</th>
+  <tr>
+  <td>Subject</td>
+  <td>PT1</td>
+  <td>HY</td>
+  <td>MM</td>
+  <td>PT1+HY</td>
+  <td>Grade</td>
+  <td>PT2</td>
+  <td>AN</td>
+  <td>MM</td>
+  <td>PT2+AN</td>
+  <td>Grade</td>
+  <td>M.M</td>
+  <td>Total</td>
+  <td>Grade</dh>
+  </h2>
 </tr>
 <tbody id="subjects"></tbody>
 </table>
@@ -149,9 +157,10 @@ button:hover{background:#3730a3;}
 </div>
 <div class="footer">Made by <b>TejbuziUPS</b></div>
 </div>
-<script type="module">
+  <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { 
   getStorage, 
   ref, 
@@ -171,8 +180,16 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app);
 
+/* 🔐 AUTH */
+const auth = getAuth(app);
+signInAnonymously(auth)
+  .then(() => {
+    console.log("Anonymous login success");
+  })
+  .catch((error) => {
+    console.error("Auth error", error);
+  });
 /* ================= SUBJECTS ================= */
 const subjects = ["Hindi","English","Math","Science","SST","Sanskrit"];
 const tbody = document.getElementById("subjects");
@@ -193,7 +210,7 @@ subjects.forEach((sub, i) => {
     <td>100</td>
     <td id="pa_total${i}">0</td>
     <td id="pa_grade${i}">-</td>
-
+     <td>200</td>
     <td id="tot${i}">0</td>
     <td id="tot_grade${i}">-</td>
   </tr>`;
@@ -264,53 +281,61 @@ window.loadPhoto = function(event){
 
 /* ================= SAVE ================= */
 window.saveDataFirebase = async function(){
-  const roll = document.getElementById("roll").value.trim();
-  if(!roll) return alert("Roll No required");
+  try {
+    const roll = document.getElementById("roll").value.trim();
+    if(!roll){
+      alert("❌ Roll No required");
+      return;
+    }
 
-  let photoURL = "";
+    let photoURL = "";
 
-  // 🔥 PHOTO UPLOAD
-  if(selectedPhoto){
-    const photoRef = ref(storage, `studentPhotos/${roll}.jpg`);
-    await uploadBytes(photoRef, selectedPhoto);
-    photoURL = await getDownloadURL(photoRef);
-  }
+    if(selectedPhoto){
+      const photoRef = ref(storage, `studentPhotos/${roll}.jpg`);
+      await uploadBytes(photoRef, selectedPhoto);
+      photoURL = await getDownloadURL(photoRef);
+    }
 
-  const marksData = [];
-  subjects.forEach((s,i)=>{
-    let ph = Math.min(val("p1"+i)+val("hy"+i),100);
-    let pa = Math.min(val("p2"+i)+val("an"+i),100);
-    marksData.push({
-      subject:s,
-      pt1:val("p1"+i),
-      hy:val("hy"+i),
-      pt2:val("p2"+i),
-      an:val("an"+i),
-      total: ph + pa
+    const marksData = [];
+    subjects.forEach((s,i)=>{
+      let ph = Math.min(val("p1"+i)+val("hy"+i),100);
+      let pa = Math.min(val("p2"+i)+val("an"+i),100);
+      marksData.push({
+        subject:s,
+        pt1:val("p1"+i),
+        hy:val("hy"+i),
+        pt2:val("p2"+i),
+        an:val("an"+i),
+        total: ph + pa
+      });
     });
-  });
 
-  let grandTotal = marksData.reduce((a,b)=>a+b.total,0);
-  let percent = ((grandTotal/(subjects.length*200))*100).toFixed(2);
+    let grandTotal = marksData.reduce((a,b)=>a+b.total,0);
+    let percent = ((grandTotal/(subjects.length*200))*100).toFixed(2);
 
-  const studentInfo = {
-    name: document.getElementById("sname").value,
-    father: document.getElementById("fname").value,
-    mother: document.getElementById("mname").value,
-    class: document.getElementById("classShow").value,
-    dob: document.getElementById("dob").value,
-    photo: photoURL
-  };
+    const studentInfo = {
+      name: document.getElementById("sname").value,
+      father: document.getElementById("fname").value,
+      mother: document.getElementById("mname").value,
+      class: document.getElementById("classShow").value,
+      dob: document.getElementById("dob").value,
+      photo: photoURL
+    };
 
-  await setDoc(doc(db,"results",roll),{
-    student: studentInfo,
-    marksData,
-    grandTotal,
-    percent,
-    grade: grade(percent)
-  });
+    await setDoc(doc(db,"results",roll),{
+      student: studentInfo,
+      marksData,
+      grandTotal,
+      percent,
+      grade: grade(percent)
+    });
 
-  alert("Data + Photo Saved ✅");
+    alert("✅ Record Saved Successfully!");
+
+  } catch (err) {
+    console.error(err);
+    alert("❌ Save Failed! Check console.");
+  }
 };
 
 /* ================= LOAD ================= */
